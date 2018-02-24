@@ -1,54 +1,66 @@
 #!/bin/bash
 #CarrIOTA field Nodestatistics
-#(c) Michi6383
+#by Michi6383 & 0xDEADBEEF
+#USAGE scriptname.sh nodename
+#EXAMPLE getPoints.sh iota1.heidger.eu
 
-#get all statistics of your node
-nodestats=$(curl https://field.carriota.com/api/v1/graph --insecure | jq '.[] | select(.field.name=="<<ENTER YOUR NODE NAME HERE>>")')
-#echo ${nodestats}
+nodename="$1"
 
-attachToTangle=$(echo $nodestats | jq -r '.workDone.attachToTangle')
-attachToTanglePoints=$((${attachToTangle}*50))
-#echo $attachToTanglePoints
+#check for existence and get all statistics of your node
+nodestats=$(curl -s https://field.carriota.com/api/v1/graph --insecure | jq ".[] | select(.field.name==\"$nodename\")")
+echo ${nodestats} | grep -q ${nodename}
+nodefound=$?
+if [ "$nodefound" = "0" ];
+  then
+    attachToTangle=$(echo $nodestats | jq -r '.workDone.attachToTangle')
+                attachToTanglePoints=$((${attachToTangle}*50))
+                #echo $attachToTanglePoints
 
-broadcastTransactions=$(echo $nodestats | jq -r '.workDone.broadcastTransactions')
-broadcastTransactionsPoints=$((${broadcastTransactions}*5))
-#echo $broadcastTransactionsPoints
+                broadcastTransactions=$(echo $nodestats | jq -r '.workDone.broadcastTransactions')
+          broadcastTransactionsPoints=$((${broadcastTransactions}*5))
+    #echo $broadcastTransactionsPoints
 
-checkConsistency=$(echo $nodestats | jq -r '.workDone.checkConsistency')
-checkConsistencyPoints=$((${checkConsistency}*5))
-#echo $checkConsistencyPoints
+    checkConsistency=$(echo $nodestats | jq -r '.workDone.checkConsistency')
+    checkConsistencyPoints=$((${checkConsistency}*5))
+    #echo $checkConsistencyPoints
 
-findTransactions=$(echo $nodestats | jq -r '.workDone.findTransactions')
-findTransactionsPoints=$((${findTransactions}*5))
-#echo $findTransactionsPoints
+    findTransactions=$(echo $nodestats | jq -r '.workDone.findTransactions')
+    findTransactionsPoints=$((${findTransactions}*5))
+    #echo $findTransactionsPoints
 
-getBalances=$(echo $nodestats | jq -r '.workDone.getBalances')
-getBalancesPoints=$((${getBalances}*3))
-#echo $getBalancesPoints
+    getBalances=$(echo $nodestats | jq -r '.workDone.getBalances')
+    getBalancesPoints=$((${getBalances}*3))
+    #echo $getBalancesPoints
 
-getInclusionStates=$(echo $nodestats | jq -r '.workDone.getInclusionStates')
-getInclusionStatesPoints=$((${getInclusionStates}*3))
-#echo $getInclusionStatesPoints
+    getInclusionStates=$(echo $nodestats | jq -r '.workDone.getInclusionStates')
+    getInclusionStatesPoints=$((${getInclusionStates}*3))
+    #echo $getInclusionStatesPoints
 
-getNodeInfo=$(echo $nodestats | jq -r '.workDone.getNodeInfo')
-getNodeInfoPoints=$((${getNodeInfo}*1))
-#echo $getNodeInfoPoints
+    getNodeInfo=$(echo $nodestats | jq -r '.workDone.getNodeInfo')
+    getNodeInfoPoints=$((${getNodeInfo}*1))
+    #echo $getNodeInfoPoints
 
-getTransactionsToApprove=$(echo $nodestats | jq -r '.workDone.getTransactionsToApprove')
-getTransactionsToApprovePoints=$((${getTransactionsToApprove}*3))
-#echo $getTransactionsToApprovePoints
+    getTransactionsToApprove=$(echo $nodestats | jq -r '.workDone.getTransactionsToApprove')
+    getTransactionsToApprovePoints=$((${getTransactionsToApprove}*3))
+    #echo $getTransactionsToApprovePoints
 
-getTrytes=$(echo $nodestats | jq -r '.workDone.getTrytes')
-getTrytesPoints=$((${getTrytes}*3))
-#echo $getTrytesPoints
+    getTrytes=$(echo $nodestats | jq -r '.workDone.getTrytes')
+    getTrytesPoints=$((${getTrytes}*3))
+    #echo $getTrytesPoints
 
-storeTransactions=$(echo $nodestats | jq -r '.workDone.storeTransactions')
-storeTransactionsPoints=$((${storeTransactions}*20))
-#echo $storeTransactionsPoints
+    storeTransactions=$(echo $nodestats | jq -r '.workDone.storeTransactions')
+    storeTransactionsPoints=$((${storeTransactions}*20))
+    #echo $storeTransactionsPoints
 
-wereAddressesSpentFrom=$(echo $nodestats | jq -r '.workDone.wereAddressesSpentFrom')
-wereAddressesSpentFromPoints=$((${wereAddressesSpentFrom}*5))
-#echo $wereAddressesSpentFromPoints
+    wereAddressesSpentFrom=$(echo $nodestats | jq -r '.workDone.wereAddressesSpentFrom')
+    wereAddressesSpentFromPoints=$((${wereAddressesSpentFrom}*5))
+    #echo $wereAddressesSpentFromPoints
 
-echo Total: $((attachToTanglePoints + broadcastTransactionsPoints + checkConsistencyPoints + findTransactionsPoints + getBalancesPoints + getInclusionStatesPoints + getNodeInfoPoints + getTransactionsToApprovePoints + getTrytesPoints + storeTransactionsPoints + wereAddressesSpentFromPoints))
-
+    echo Total: $((attachToTanglePoints + broadcastTransactionsPoints + checkConsistencyPoints + findTransactionsPoints + getBalancesPoints + getInclusionStatesPoints + getNodeInfoPoints + getTransactionsToApprovePoints + getTrytesPoints + storeTransactionsPoints + wereAddressesSpentFromPoints))
+    exit 0
+  elif [ "$nodefound" = "1" ];
+		then
+		echo "${nodename} not found! Is Field running properly on your node?"
+		exit 1
+	fi
+fi
