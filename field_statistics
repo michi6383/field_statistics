@@ -64,7 +64,7 @@ if [ "$nodefound" = "0" ];
     wereAddressesSpentFromPoints=$((${wereAddressesSpentFrom}*5))
     #echo $wereAddressesSpentFromPoints
 
-    echo Total: $((attachToTanglePoints + broadcastTransactionsPoints + checkConsistencyPoints + findTransactionsPoints + getBalancesPoints + getInclusionStatesPoints + getNodeInfoPoints + getTransactionsToApprovePoints + getTrytesPoints + storeTransactionsPoints + wereAddressesSpentFromPoints))
+    echo "Total:   " $((attachToTanglePoints + broadcastTransactionsPoints + checkConsistencyPoints + findTransactionsPoints + getBalancesPoints + getInclusionStatesPoints + getNodeInfoPoints + getTransactionsToApprovePoints + getTrytesPoints + storeTransactionsPoints + wereAddressesSpentFromPoints))
 	echo "Payouts:"
 	echo $payoutstats | jq -r '.value'
     exit 0
