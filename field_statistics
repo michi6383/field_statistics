@@ -12,12 +12,20 @@ echo ${nodestats} | grep -q ${nodename}
 nodefound=$?
 if [ "$nodefound" = "0" ];
   then
+	echo Nodename: $nodename
+	
+	publicId=$(echo $nodestats | jq -r '.field.publicId')
+	echo PublicID: $publicId
+	
+	payoutstats=$(curl -s https://field.carriota.com/api/v1/seasons --insecure | jq ".[].payouts[] | select(.publicId==\"$publicId\")")
+	#echo $payoutstats
+  
     attachToTangle=$(echo $nodestats | jq -r '.workDone.attachToTangle')
-                attachToTanglePoints=$((${attachToTangle}*50))
-                #echo $attachToTanglePoints
+    attachToTanglePoints=$((${attachToTangle}*50))
+    #echo $attachToTanglePoints
 
-                broadcastTransactions=$(echo $nodestats | jq -r '.workDone.broadcastTransactions')
-          broadcastTransactionsPoints=$((${broadcastTransactions}*5))
+    broadcastTransactions=$(echo $nodestats | jq -r '.workDone.broadcastTransactions')
+    broadcastTransactionsPoints=$((${broadcastTransactions}*5))
     #echo $broadcastTransactionsPoints
 
     checkConsistency=$(echo $nodestats | jq -r '.workDone.checkConsistency')
@@ -57,6 +65,8 @@ if [ "$nodefound" = "0" ];
     #echo $wereAddressesSpentFromPoints
 
     echo Total: $((attachToTanglePoints + broadcastTransactionsPoints + checkConsistencyPoints + findTransactionsPoints + getBalancesPoints + getInclusionStatesPoints + getNodeInfoPoints + getTransactionsToApprovePoints + getTrytesPoints + storeTransactionsPoints + wereAddressesSpentFromPoints))
+	echo "Payouts:"
+	echo $payoutstats | jq -r '.value'
     exit 0
   elif [ "$nodefound" = "1" ];
 		then
