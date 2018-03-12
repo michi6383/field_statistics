@@ -1,8 +1,10 @@
 #!/bin/bash
 #CarrIOTA field Nodestatistics
 #by Michi6383 & 0xDEADBEEF
-#USAGE scriptname.sh nodename
-#EXAMPLE getPoints.sh iota1.heidger.eu
+#INSTALLATION AND HOW TO USE
+#wget https://raw.githubusercontent.com/michi6383/field_statistics/master/field_statistics -O points.sh
+#chmod +x points.sh
+#./points.sh iota1.heidger.eu (replace iota1.heidger.eu with your name configured in field.ini)
 
 nodename="$1"
 
